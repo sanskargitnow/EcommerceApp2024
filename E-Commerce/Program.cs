@@ -1,4 +1,5 @@
-using E_Commerce.Data;
+
+using E_Commerce.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
