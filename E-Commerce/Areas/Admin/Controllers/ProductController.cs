@@ -1,5 +1,6 @@
 ﻿using Ecommerce.DataAccess.Repository.IRepository;
 using Ecommerce.Models;
+using Ecommerce.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -17,26 +18,46 @@ namespace E_Commerce.Areas.Admin.Controllers
         {
             List<Products> objCategoryList = _UnitOfWorkContext.Product.GetAll().ToList();
 
-            IEnumerable<SelectListItem> CategoryList = _UnitOfWorkContext.Category.GetAll().Select(u => new SelectListItem
-            {
-                Text = u.Name,
-                Value = u.Id.ToString()
-            });
+           
             return View(objCategoryList);
 
         }
 
         public IActionResult Create()
         {
-            return View();
+
+            //IEnumerable<SelectListItem> CategoryList = _UnitOfWorkContext.Category.GetAll().Select(u => new SelectListItem
+            //{
+            //    Text = u.Name,
+            //    Value = u.Id.ToString()
+            //});
+
+           
+
+            ProductVM productVM = new()
+            {
+
+                CategoryList = _UnitOfWorkContext.Category.GetAll().Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.Id.ToString()
+                }),
+
+                Product = new Products()
+
+            };
+
+            return View(productVM);
         }
         [HttpPost]
-        public IActionResult Create(Products obj)
+        public IActionResult Create(ProductVM obj)
         {
+
+
           
             if (ModelState.IsValid)
             {
-                _UnitOfWorkContext.Product.Add(obj);
+                _UnitOfWorkContext.Product.Add(obj.Product);
                 _UnitOfWorkContext.save();
                 TempData["success"] = "Product created successfully";
                 return RedirectToAction("Index", "Product");
