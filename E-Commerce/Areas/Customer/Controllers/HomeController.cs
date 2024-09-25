@@ -1,3 +1,4 @@
+using Ecommerce.DataAccess.Repository.IRepository;
 using Ecommerce.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -9,16 +10,30 @@ namespace E_Commerce.Areas.Customer.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IUnitOfWork _unitOfWork;
+
+        public HomeController(ILogger<HomeController> logger , IUnitOfWork unitOfWork)
         {
             _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-            return View();
+
+            IEnumerable<Products> productList = _unitOfWork.Product.GetAll(includeProperties: "Category"); 
+            return View(productList);
         }
 
+
+        public IActionResult Details(int productId)
+        {
+            Products product = _unitOfWork.Product.Get(u=>u.Id == productId, includeProperties: "Category");
+
+
+            return View(product);
+
+        }
         public IActionResult Privacy()
         {
             return View();
