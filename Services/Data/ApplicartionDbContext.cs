@@ -110,5 +110,10 @@ namespace Services.Data
         }
         public DbSet<Category> Category { get; set; }
         public DbSet<Products> Products { get; set; }
+
+        public DbSet<ShoppingCart> shoppingCarts { get; set; }
+
+        public DbSet<OrderHeader> OrderHeader { get; set; }
+        public DbSet<OrderDetails> OrderDetails { get; set; }
     }
 }

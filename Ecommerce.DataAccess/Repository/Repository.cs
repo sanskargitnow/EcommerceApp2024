@@ -31,8 +31,12 @@ namespace Ecommerce.DataAccess.Repository
            
         }
 
-        public T Get(System.Linq.Expressions.Expression<Func<T, bool>> filter , string? includeProperties = null)
+        public T Get(System.Linq.Expressions.Expression<Func<T, bool>> filter , string? includeProperties = null , bool tracked = false )
         {
+            if(tracked)
+            {
+
+       
             IQueryable<T> query = dbset;
 
             query = query.Where(filter);
@@ -45,12 +49,34 @@ namespace Ecommerce.DataAccess.Repository
                     }
             }
             return query.FirstOrDefault();
+            }
+            else
+            {
+                IQueryable<T> query = dbset.AsNoTracking();
+
+                query = query.Where(filter);
+                if (!string.IsNullOrEmpty(includeProperties))
+                {
+                    foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+
+                        query = query.Include(property);
+                         
+                    }
+                }
+                return query.FirstOrDefault();
+            }
         }
 
-        public IEnumerable<T> GetAll(string ? includeProperties = null)
+        public IEnumerable<T> GetAll(System.Linq.Expressions.Expression<Func<T, bool>> ? filter ,string ? includeProperties = null)
         {
             IQueryable<T> query = dbset;
-            if(!string.IsNullOrEmpty(includeProperties))
+            if(filter != null)
+            {
+                query = query.Where(filter);
+            }
+           
+            if (!string.IsNullOrEmpty(includeProperties))
             {
                 foreach(var property in includeProperties.Split(new char[] {','},StringSplitOptions.RemoveEmptyEntries)) {
 

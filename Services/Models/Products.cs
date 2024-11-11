@@ -54,6 +54,8 @@ namespace Services.Models
         [ValidateNever]
 
         public string ImageUrl { get; set; }
+
+        
     }
 
 }

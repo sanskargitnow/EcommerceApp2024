@@ -28,7 +28,7 @@ namespace Ecommerce.DataAccess.Repository
 
         public void update(Category category)
         {
-            _db.Update(category);
+            _db.Categories.Update(category);
         }
     }
 }
